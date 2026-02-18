@@ -2,7 +2,6 @@ module KomaMRIFiles
 
 using KomaMRIBase
 using Scanf, FileIO, HDF5, MAT, InteractiveUtils # IO related
-using SHA, MD5 # Pulseq signature verification
 using Reexport
 using MRIFiles
 import MRIFiles: insertNode
