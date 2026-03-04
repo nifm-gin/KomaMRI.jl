@@ -1,6 +1,6 @@
 #Bloch is the default simulation method
 struct Bloch <: SimulationMethod end
-
+@info "FieldMapDict VERSION LOADED"
 export Bloch
 
 include("Magnetization.jl")
@@ -39,3 +39,6 @@ include("BlochSimple/BlochSimple.jl")
 include("Bloch/cpu/BlochCPU.jl")
 include("Bloch/gpu/BlochGPU.jl")
 include("BlochDict/BlochDict.jl")
+
+include("BlochFieldmapDict/BlochFieldmapDict.jl")
+export BlochFieldmapDict
