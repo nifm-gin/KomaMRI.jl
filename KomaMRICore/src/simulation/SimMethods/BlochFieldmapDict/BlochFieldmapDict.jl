@@ -68,7 +68,8 @@ function run_spin_precession!(
 ) where {T<:Real}
     #Simulation
     #Motion
-    println("Using the new function")
+    @info """Using BlochFieldmapDict""" maxlog=1
+
     x, y, z = get_spin_coords(p.motion, p.x, p.y, p.z, seq.t[1])
     
     #Initialize arrays

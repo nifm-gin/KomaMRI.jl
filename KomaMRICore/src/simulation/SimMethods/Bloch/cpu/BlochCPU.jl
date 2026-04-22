@@ -57,6 +57,9 @@ function run_spin_precession!(
 ) where {T<:Real}
     #Simulation
     #Motion
+    @info """Using BlochCPU""" maxlog=1
+
+
     x, y, z = get_spin_coords(p.motion, p.x, p.y, p.z, seq.t[1])
     
     #Initialize arrays

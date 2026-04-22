@@ -33,6 +33,7 @@ function run_spin_precession!(
 ) where {T<:Real}
     #Simulation
     #Motion
+    @info """Using BlochSimple""" maxlog=1
     x, y, z = get_spin_coords(p.motion, p.x, p.y, p.z, seq.t')
     #Effective field
     Bz = x .* seq.Gx' .+ y .* seq.Gy' .+ z .* seq.Gz' .+ p.Δw ./ T(2π .* γ)
