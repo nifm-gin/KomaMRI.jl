@@ -8,7 +8,8 @@ export run_spin_precession!
 #export BlochFieldmapDict, FieldmapArray, build_fieldmap_interpolant, 
 # @info "FieldMapDict VERSION LOADED"
 
-const γ = 2π * 42.57747892e6  # rad/s/T
+# γ is defined globally in KomaMRIBase as 42.5774688e6 Hz/T. This is NOT γ in rad/s/T!
+# const γ = 2π * 42.57747892e6  # rad/s/T
 
 # -----------------------------
 # Fieldmap container & interpolation
@@ -80,7 +81,9 @@ function run_spin_precession!(
     ΔBz = prealloc.ΔBz
     fill!(ϕ, zero(T))
     fm0_hz = sample_fieldmap(sim_method.fieldmap, x, y, z)  # sample initial fieldmap
-    @. ΔBz = 2π * fm0_hz / γ                               # convert to Tesla (or rad/s)
+    
+    #@. ΔBz = 2π * fm0_hz / γ                               # convert to Tesla (or rad/s)
+    @. ΔBz = fm0_hz / γ       # Calculate ΔBz in T at spin positions
 
     @. Bz_old = x[:,1] * seq.Gx[1] + y[:,1] * seq.Gy[1] + z[:,1] * seq.Gz[1] + ΔBz
 
@@ -96,7 +99,8 @@ function run_spin_precession!(
         x, y, z = get_spin_coords(p.motion, p.x, p.y, p.z, seq.t[seq_idx])
 
         fm_hz = sample_fieldmap(sim_method.fieldmap, x, y, z)
-        @. ΔBz = 2π * fm_hz / γ  # overwrite with local B0
+        #@. ΔBz = 2π * fm_hz / γ  # overwrite with local B0
+        @. ΔBz = fm_hz / γ   # Calculate ΔBz in T at spin positions
 
         t_seq += seq.Δt[seq_idx-1]
 
