@@ -340,6 +340,9 @@ function simulate(
 )
     #Simulation parameter unpacking, and setting defaults if key is not defined
     sim_params = default_sim_params(sim_params)
+    if sim_params["sim_method"] isa BlochFieldmapDict && sim_params["gpu"]
+        throw(ArgumentError("BlochFieldmapDict currently supports CPU precession only. Set sim_params[\"gpu\"] = false."))
+    end
     #Warn if user is trying to run on CPU without enabling multi-threading
     if (!sim_params["gpu"] && Threads.nthreads() == 1)
         @info """Simulation will be run on the CPU with only 1 thread. To enable multi-threading, start julia with --threads=auto

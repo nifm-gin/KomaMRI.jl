@@ -57,6 +57,25 @@ function sim_output_dim(obj::Phantom{T}, seq::Sequence, sys::Scanner, sim_method
     return (sum(seq.ADC.N), length(obj), 1)
 end
 
+function prealloc(sim_method::BlochFieldmapDict, backend::KA.CPU, obj::Phantom{T}, M::Mag{T}, max_block_length::Integer, groupsize) where {T<:Real}
+    return BlochCPUPrealloc(
+        Mag(
+            similar(M.xy),
+            similar(M.z)
+        ),
+        similar(obj.x),
+        similar(obj.x),
+        similar(obj.x),
+        Spinor(
+            similar(M.xy),
+            similar(M.xy)
+        ),
+        obj.Δw ./ T(2π .* γ)
+    )
+end
+
+
+
 function run_spin_precession!(
     p::Phantom{T},
     seq::DiscreteSequence{T},
@@ -132,6 +151,19 @@ function run_spin_precession!(
     outflow_spin_reset!(M,  seq.t', p.motion; replace_by=p.ρ)
 
     return nothing
+end
+
+function run_spin_precession!(
+    p::Phantom{T},
+    seq::DiscreteSequence{T},
+    sig::AbstractArray{Complex{T}},
+    M::Mag{T},
+    sim_method::BlochFieldmapDict,
+    groupsize,
+    backend::KA.Backend,
+    prealloc::PreallocResult
+) where {T<:Real}
+    throw(ArgumentError("BlochFieldmapDict currently supports CPU precession only. Set sim_params[\"gpu\"] = false."))
 end
 
 # end # module
