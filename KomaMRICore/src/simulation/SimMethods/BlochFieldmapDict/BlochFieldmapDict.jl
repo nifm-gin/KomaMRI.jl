@@ -34,8 +34,8 @@ end
 #     return FieldmapArray(x, y, z, arr, itp)
 # end
 
-function sample_fieldmap(fm::FieldmapArray, xs::Vector, ys::Vector, zs::Vector)
-    fm.interp.(xs, ys, zs)
+function sample_fieldmap(fm::FieldmapArray, xs::AbstractArray, ys::AbstractArray, zs::AbstractArray)
+    return vec(fm.interp.(xs, ys, zs))
 end
 
 # -----------------------------
