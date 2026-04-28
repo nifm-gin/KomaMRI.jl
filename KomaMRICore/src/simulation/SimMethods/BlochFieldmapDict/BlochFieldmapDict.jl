@@ -22,6 +22,10 @@ struct FieldmapArray
     interp::Any
 end
 
+function Base.show(io::IO, fm::FieldmapArray)
+    print(io, "FieldmapArray(size=", size(fm.arr), ")")
+end
+
 # function build_fieldmap_interpolant(x, y, z, arr)
 #     using Interpolations
 #     itp = Interpolations.interpolate((x, y, z), arr, Interpolations.Gridded(Interpolations.Linear()))
@@ -46,8 +50,7 @@ struct BlochFieldmapDict <: SimulationMethod
     # overwrite_deltaBz::Bool
 end
 
-# Optional: show method
-# Base.show(io::IO, s::BlochFieldmapDict) = print(io, "BlochFieldmapDict(overwrite=$(s.overwrite_deltaBz))")
+Base.show(io::IO, sim_method::BlochFieldmapDict) = print(io, "BlochFieldmapDict(", sim_method.fieldmap, ")")
 
 # -----------------------------
 # Output dimension
@@ -167,4 +170,3 @@ function run_spin_precession!(
 end
 
 # end # module
-
