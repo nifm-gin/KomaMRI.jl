@@ -39,4 +39,5 @@ examples/5.koma_paper/comparison_accuracy/**/*.h5
 .julia-local/
 .directory
 .vscode/launch.json
+notebooks/local/notebook_setup.local.jl
 .codex_*
