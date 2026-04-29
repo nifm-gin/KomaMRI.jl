@@ -322,6 +322,16 @@ using TestItems, TestItemRunner
         @test KomaMRIBase.is_GR_off(seqd) ==  !KomaMRIBase.is_GR_on(seqd)
         @test KomaMRIBase.is_RF_off(seqd) ==  !KomaMRIBase.is_RF_on(seqd)
         @test KomaMRIBase.is_ADC_off(seqd) == !KomaMRIBase.is_ADC_on(seqd)
+
+        delay_seq = Sequence([Grad(0.0, 0.0);;])
+        delay_seq.DUR[1] = T
+        t_delay, _ = KomaMRIBase.get_variable_times(delay_seq; Δt=T/N, Δt_rf=T/N, sample_all_blocks=true)
+        @test 0.0 in t_delay
+        @test T in t_delay
+        @test maximum(diff(t_delay[2:end-1])) <= T/N
+
+        old_sampling_params = Dict{String, Any}("Δt" => T/N, "Δt_rf" => T/N)
+        @test KomaMRIBase.discretize(seq; sampling_params=old_sampling_params) isa KomaMRIBase.DiscreteSequence
     end
 
      @testset "SequenceFunctions" begin

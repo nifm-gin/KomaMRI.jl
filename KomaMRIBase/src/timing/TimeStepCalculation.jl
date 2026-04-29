@@ -89,7 +89,7 @@ This function returns non-uniform time points that are relevant in the sequence 
 - `Δt`: (`::Vector{Float64}`, `[s]`) delta time array with the separation between two
     adjacent time points of the `t` time array
 """
-function get_variable_times(seq; Δt=1e-3, Δt_rf=1e-5, motion=NoMotion())
+function get_variable_times(seq; Δt=1e-3, Δt_rf=1e-5, motion=NoMotion(), sample_all_blocks=false)
 	t = Float64[]
 	ϵ = MIN_RISE_TIME # Small Float64
 	T0 = get_block_start_times(seq)
@@ -119,6 +119,9 @@ function get_variable_times(seq; Δt=1e-3, Δt_rf=1e-5, motion=NoMotion())
 		end
         if is_ADC_on(s)
             append!(t_block, times(s.ADC[1]) .+ t0) # get_adc_sampling_times(seq) uses times(s.ADC[1]) .+ T0[i]
+        end
+        if sample_all_blocks && !is_RF_on(s)
+            append!(t_block, points_from_key_times([t0, t0 + seq.DUR[i]]; dt=Δt))
         end
         append!(t, t_block)
 	end

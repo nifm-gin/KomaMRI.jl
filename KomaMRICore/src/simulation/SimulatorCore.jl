@@ -52,6 +52,7 @@ function default_sim_params(sim_params=Dict{String,Any}())
     get!(sim_params, "Nblocks", 20)
     get!(sim_params, "Δt", sampling_params["Δt"])
     get!(sim_params, "Δt_rf", sampling_params["Δt_rf"])
+    get!(sim_params, "sample_all_blocks", sampling_params["sample_all_blocks"])
     get!(sim_params, "sim_method", Bloch())
     get!(sim_params, "precision", "f32")
     get!(sim_params, "return_type", "raw")
@@ -342,6 +343,9 @@ function simulate(
     sim_params = default_sim_params(sim_params)
     if sim_params["sim_method"] isa BlochFieldmapDict && sim_params["gpu"]
         throw(ArgumentError("BlochFieldmapDict currently supports CPU precession only. Set sim_params[\"gpu\"] = false."))
+    end
+    if sim_params["sim_method"] isa BlochFieldmapDict
+        sim_params["sample_all_blocks"] = true
     end
     #Warn if user is trying to run on CPU without enabling multi-threading
     if (!sim_params["gpu"] && Threads.nthreads() == 1)
